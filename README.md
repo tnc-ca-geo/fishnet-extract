@@ -1,6 +1,6 @@
 # extract
 
-Simple Python tool to extract images from videos
+Simple Python tool to extract images from videos. Support currently only one singel annotation file format.
 
 ## Instruction for use under Windows
 
@@ -86,7 +86,7 @@ Notes:
 - output folder will NOT be created by script, please create manually
 - during the first run moviepy will acquire [ffmpeg](https://www.ffmpeg.org/) if not avialable on your system, you might be able to install manually if that step fails.
 
-### Appendix use of virtualenv
+### Appendix: Use with virtualenv
 
 Virtualenv is a way to isolate application dependencies for python.
 
@@ -94,5 +94,18 @@ If you want to use virtualenv to protect other Python dependencies or you do not
 
 ```virtualenv env``` 
 
-If you have several versions of Pythons on the system it will use the one on your sustem path (or the one ```which python```) returns. Use the -p flag to point to a different python executable if necessary.
+If you have several versions of Pythons on the system it will use the one on your system path (or the one ```which python```) returns. Use the -p flag to point to a different python executable if necessary.
 
+A good place to create this environment would be inside or next to the script folder but it does not really matter as long as this environment is activate.
+
+The command will create a env folder which will contain a copy of the Python executable, the Python modules, as well as scripts to activate or deactivate the virtualenv. 
+
+Activate:
+
+```env\Scripts\activate.bat```
+
+Deactivate
+
+```env\Scripts\deactivate.bat```
+
+If you use the virtualenv, you have to activate BEFORE you run pip install. Pip install will install in whatever environment is active.
