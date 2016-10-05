@@ -92,7 +92,9 @@ Virtualenv is a way to isolate application dependencies for python.
 
 If you want to use virtualenv to protect other Python dependencies or you do not have privileges to install sytem-wide Python packages. You can create a virtualenv by typing.
 
-```virtualenv env``` 
+```
+virtualenv env
+``` 
 
 If you have several versions of Pythons on the system it will use the one on your system path (or the one ```which python```) returns. Use the -p flag to point to a different python executable if necessary.
 
@@ -102,10 +104,14 @@ The command will create a env folder which will contain a copy of the Python exe
 
 Activate:
 
-```env\Scripts\activate.bat```
+```
+env\Scripts\activate.bat
+```
 
 Deactivate
 
-```env\Scripts\deactivate.bat```
+```
+env\Scripts\deactivate.bat
+```
 
 If you use the virtualenv, you have to activate BEFORE you run pip install. Pip install will install in whatever environment is active.
