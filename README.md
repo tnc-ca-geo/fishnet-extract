@@ -2,7 +2,7 @@
 
 Simple Python tool to extract images from videos. Supports currently only one single annotation file format.
 
-## Instruction for use under Windows
+## Instruction for use on Windows
 
 ### Install Python 2.7
 
