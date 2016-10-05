@@ -47,11 +47,11 @@ If that fails, you might
 Either download [zip file](https://codeload.github.com/tnc-ca-geo/extract/zip/master) or use 
 ```git clone https://github.com/tnc-ca-geo/extract.git``` if you are familar with git and have it installed on your system.
 
-If you downloaded the zip file, unzip it and place it somewhere easy to find like C:\extract-master.
+If you downloaded the zip file, unpack it and place it somewhere easy to find like ```C:\extract-master```
 
 ### Install dependencies
 
-Find the requirements.txt file in C:\extract-master Open ```cmd``` or use th ealready open terminal. Navigate to the folder where requirements.txt is situated. Then type:
+Find the requirements.txt file in ```C:\extract-master```. Open ```cmd``` or use the already open terminal. Navigate ```cd``` to the folder where requirements.txt is situated. Then type:
 
 ```pip install -r requirements.txt```
 
@@ -97,6 +97,9 @@ Example (assuming media files sitting in ```C:\media``` folder next to the scrip
 ```
 python extract.py -v C:\media\cam_3_day.mp4 -a C:\media\1631.txt -o "2016-08-14 05:31:18" -f C:\media\stills
 ```
+where:
+cam_3_day.mp4 = example name of input video file, file name should not include spaces
+1631.txt = input annotations text file, we are using AnnotationDateTime to specify, please make sure a replacement file looks identical (e.g. AnnotationDateTime) in same column position
 
 Notes:
 
