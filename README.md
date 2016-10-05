@@ -9,7 +9,7 @@ Simple Python tool to extract images from videos. Supports currently only one si
 We are using Python 2.7 because of its ubiquity and possible compatibility
 issues in some of the modules used.
 
-Test whether Python is installed and on your system path:
+Test whether Python is installed on your system path:
 
 Go to start menu > type ```cmd``` into search field > open cmd
 
@@ -22,6 +22,9 @@ It has to be 2.7., ideally newer than 2.7.8 (because of the pip and virtualenv b
 If this command informs you that it did not find a Python executable, get Python for Windows here 
 https://www.python.org/downloads/ and install Python 2.7 (NOT 3.x).
 
+Once you install Python it may require that you add it to the windows path env variable, do this in the command line by typing
+
+```setx path "%path%;C:\Python27;"```
 
 ### Test whether pip is available
 
