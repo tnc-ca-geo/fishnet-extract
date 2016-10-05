@@ -2,14 +2,14 @@
 
 Simple Python tool to extract images from videos. Supports currently only one single annotation file format.
 
-## Instruction for use under Windows
+## Instruction for use on Windows
 
 ### Install Python 2.7
 
 We are using Python 2.7 because of its ubiquity and possible compatibility
 issues in some of the modules used.
 
-Test whether Python is installed and on your system path:
+Test whether Python is installed on your system path:
 
 Go to start menu > type ```cmd``` into search field > open cmd
 
@@ -22,6 +22,11 @@ It has to be 2.7., ideally newer than 2.7.8 (because of the pip and virtualenv b
 If this command informs you that it did not find a Python executable, get Python for Windows here 
 https://www.python.org/downloads/ and install Python 2.7 (NOT 3.x).
 
+Once you install Python it may require that you add it to the windows path env variable, do this in the command line by typing
+
+```setx path "%path%;C:\Python27;"```
+
+you'll need to close and re-open your cmd window after you do this in order for it to take effect
 
 ### Test whether pip is available
 
@@ -30,25 +35,31 @@ Pip is Python's package manager. Since Python 2.7.9 it ships with the install an
 Try: ```pip --help```
 
 If that fails, you might
-1. Update your Python installation
-2. Get pip separately, see here https://www.python.org/downloads/
+
+1. update the window path env variable for pip using ```setx path "%path%;C:\Python27\Scripts;"```
+
+2. Update your Python installation
+
+3. Get pip separately, see here https://www.python.org/downloads/
 
 ### Get this repository 
 
 Either download [zip file](https://codeload.github.com/tnc-ca-geo/extract/zip/master) or use 
 ```git clone https://github.com/tnc-ca-geo/extract.git``` if you are familar with git and have it installed on your system.
 
-If you downloaded the zip file, unzip it and place it somewhere easy to find like C:\extract-master.
+If you downloaded the zip file, unpack it and place it somewhere easy to find like ```C:\extract-master```
 
 ### Install dependencies
 
-Find the requirements.txt file in C:\extract-master Open ```cmd``` or use th ealready open terminal. Navigate to the folder where requirements.txt is situated. Then type:
+Find the requirements.txt file in ```C:\extract-master```. Open ```cmd``` or use the already open terminal. Navigate ```cd``` to the folder where requirements.txt is situated. Then type:
 
 ```pip install -r requirements.txt```
 
 This will install the dependencies globally on the system, there are number of non-python libraries that will be installed if not already installed. You might run into permission issues. In this case you should run
 
+
 a) ```cmd``` with administrator privileges and try again
+
 b) try to use isolated virtual environments for installation (directions see below).
 
 
@@ -58,9 +69,11 @@ Use your ```cmd``` terminal to make sure all the modules are installed properly.
 
 ```python extract.py --help```
 
-(If you have several versions of Python installed on your system, you might provide an explicit path to python 2.7.9 or above, e.g.
+These scripts rely on https://ffmpeg.org/ and this will be automatically downloaded after running help if you do not have it
 
-```C:/Python27/python extract.py --help```)
+If you have several versions of Python installed on your system, you might provide an explicit path to python 2.7.9 or above, e.g.
+
+```C:\Python27\python extract.py --help```
 
 If you use a virtual env make sure it is activated (see below).
 
@@ -79,18 +92,22 @@ options:
           -h --help    This help
 ```
 
-Example (assuming media files sitting in ```media``` folder next to the script folder:
+Example (assuming media files sitting in ```C:\media``` folder next to the script folder:
 
 ```
-python extract.py -v ../media/cam_3_day.mp4 -a ../media/1631.txt -o "2016-08-14 05:31:18" -f ../media
+python extract.py -v C:\media\cam_3_day.mp4 -a C:\media\1631.txt -o "2016-08-14 05:31:18" -f C:\media\stills
 ```
+where:
+cam_3_day.mp4 = example name of input video file, file name should not include spaces
+
+1631.txt = Input annotations text file. We are using AnnotationDateTime to specify extract location, please ensure a replacement file looks identical (e.g. AnnotationDateTime in same column position)
 
 Notes:
 
 - Script can handle relative and absolute file names
-- videofile and annotations are requires
-- without an output path images will be stored in the script folder (well not ideal) 
-- output folder will NOT be created by script, please create manually
+- videofile and csv of annotations are required
+- without an output path images will be stored in the ```extract-master``` folder (not ideal)
+- output folder will NOT be created by script, please create manually,the above example uses a folder called "stills"
 - during the first run moviepy will acquire [ffmpeg](https://www.ffmpeg.org/) if not avialable on your system, you might be able to install manually if that step fails.
 
 ### Appendix: Use with virtualenv
