@@ -1,6 +1,6 @@
 # extract
 
-Simple Python tool to extract images from videos. Supports currently only one single annotation file format.
+Simple Python tool to extract images from videos. Currently supports only one annotation file format.
 
 ## Instruction for use on Windows
 
