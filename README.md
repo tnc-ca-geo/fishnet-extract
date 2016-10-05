@@ -38,13 +38,13 @@ If that fails, you might
 Either download [zip file](https://codeload.github.com/tnc-ca-geo/extract/zip/master) or use 
 ```git clone https://github.com/tnc-ca-geo/extract.git``` if you are familar with git and have it installed on your system.
 
-Unzip the repo if downloaded the zip file.
+If you downloaded the zip file, unzip it and place it somewhere easy to find like C:\extract-master.
 
 ### Install dependencies
 
-Find the requirements.txt file in the folder. Open ```cmd``` or use th ealready open terminal. Navigate to the folder where requirements.txt is situated. Then type:
+Find the requirements.txt file in C:\extract-master Open ```cmd``` or use th ealready open terminal. Navigate to the folder where requirements.txt is situated. Then type:
 
-```pip install -r requirements```
+```pip install -r requirements.txt```
 
 This will install the dependencies globally on the system, there are number of non-python libraries that will be installed if not already installed. You might run into permission issues. In this case you should run
 
@@ -54,7 +54,7 @@ b) try to use isolated virtual environments for installation (directions see bel
 
 ### Run the script
 
-Use your ```cmd``` terminal to make sure all the modules are installed properly. Go to the project folder and type:
+Use your ```cmd``` terminal to make sure all the modules are installed properly. Go to C:\extract-master and type:
 
 ```python extract.py --help```
 
