@@ -7,19 +7,22 @@ from metadata import metadata_for_filelike
 
 INFILE = '../media/cam_3_day.mp4'
 ANNOTATIONS ='../media/1631.txt'
-DEFAULT_FOLDER = os.path.dirname(os.path.realpath(__file__))
+DEFAULT_FOLDER = '.' # os.path.dirname(os.path.realpath(__file__))
 TIMEFORMAT = '%d/%m/%Y %H:%M:%S'
-OUT_TEMPLATE = ''
+OUT_TEMPLATE = '{0}/{1}_{2}_{3}_image%03d.jpeg'
 
-HELP = ('\nextract.py --videofile <inputfile> --annotations <annotationfile>.txt\n\n'
-        'options:\n'
-        '          -o --offset  Start time of the video (you might be able to get it from the first frame).\n'
-        '                       If not provided, EXIF \'Create Date\' will be used.\n'
-        '                       Time format is \"YYYY-MM-DD HH:MM:SS\". \n'
-        '                       Use quotes around the date or escape otherwise.\n'
-        '          -f --folder  Output folder. If not provided the current folder will be used.\n'
-        '          -w --window  Number of seconds that will be extracted from the event start. Defaults to 3.\n'
-        '          -h --help    This help\n')
+HELP = (
+    '\nextract.py'
+    '--videofile <inputfile> --annotations <annotationfile>.txt\n\n'
+    'options:\n\n'
+    '   -o --offset  Start time of the video (you might be able to get it\n'
+    '                from the first frame). If not provided, EXIF\n'
+    '                \'Create Date\' will be used. Time format is \n'
+    '                \"YYYY-MM-DD HH:MM:SS\". Use quotes around the \n'
+    '                date or escape otherwise.\n'
+    '   -f --folder  Output folder. If not provided the current folder will be used.\n'
+    '   -w --window  Number of seconds that will be extracted from the event start. Defaults to 3.\n'
+    '   -h --help    This help\n')
 
 
 def get_absolute_path(filename):
@@ -132,11 +135,10 @@ def iterate_over_annotations(opts):
                     start, end = get_window(ct, opts['window'])
                     snippet = get_epoch(dt)
                     subclip = clip.subclip(t_start=start, t_end=end)
-                    template = '{}/{}_{}_{}_image%03d.jpeg'
-                    out_name = template.format(
+                    out_name = OUT_TEMPLATE.format(
                         opts['folder'], infile_snippet,
                         snippet, parts[13].strip('"'))
-                    subclip.write_images_sequence(out_name)
+                    subclip.write_images_sequence(out_name, fps=10)
                 except ValueError:
                     pass
 
