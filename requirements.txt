@@ -1,0 +1,7 @@
+apipkg==1.4
+execnet==1.4.1
+moviepy==0.2.2.11
+pillow
+hachoir_core
+hachoir_parser
+hachoir_metadata
