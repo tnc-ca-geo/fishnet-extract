@@ -47,7 +47,7 @@ b) try to use isolated virtual environments for installation (directions see bel
 
 ### Run the script
 
-Use your ```cmd``` terminal to make sure all the modules are installed properly. Go to the project folder and type:
+Use your ```cmd``` terminal to make sure all the modules are installed properly. Go to C:\extract-master and type:
 
 ```python extract.py --help```
 
