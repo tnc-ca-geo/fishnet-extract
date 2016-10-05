@@ -57,7 +57,9 @@ Find the requirements.txt file in C:\extract-master Open ```cmd``` or use th eal
 
 This will install the dependencies globally on the system, there are number of non-python libraries that will be installed if not already installed. You might run into permission issues. In this case you should run
 
+
 a) ```cmd``` with administrator privileges and try again
+
 b) try to use isolated virtual environments for installation (directions see below).
 
 
@@ -88,18 +90,18 @@ options:
           -h --help    This help
 ```
 
-Example (assuming media files sitting in ```media``` folder next to the script folder:
+Example (assuming media files sitting in ```C:\media``` folder next to the script folder:
 
 ```
-python extract.py -v ../media/cam_3_day.mp4 -a ../media/1631.txt -o "2016-08-14 05:31:18" -f ../media
+python extract.py -v C:\media\cam_3_day.mp4 -a C:\media\1631.txt -o "2016-08-14 05:31:18" -f C:\media\stills
 ```
 
 Notes:
 
 - Script can handle relative and absolute file names
-- videofile and annotations are requires
-- without an output path images will be stored in the script folder (well not ideal) 
-- output folder will NOT be created by script, please create manually
+- videofile and csv of annotations are required
+- without an output path images will be stored in the ```extract-master``` folder (not ideal)
+- output folder will NOT be created by script, please create manually,the above example uses a folder called "stills"
 - during the first run moviepy will acquire [ffmpeg](https://www.ffmpeg.org/) if not avialable on your system, you might be able to install manually if that step fails.
 
 ### Appendix: Use with virtualenv
