@@ -3,17 +3,13 @@ import sys
 from datetime import datetime
 from getopt import getopt, GetoptError
 from moviepy.editor import VideoFileClip
-from PIL import Image
 from metadata import metadata_for_filelike
-
-from moviepy.video.fx.accel_decel import accel_decel
-from moviepy.video.fx.blackwhite import blackwhite
-
 
 INFILE = '../media/cam_3_day.mp4'
 ANNOTATIONS ='../media/1631.txt'
 DEFAULT_FOLDER = os.path.dirname(os.path.realpath(__file__))
 TIMEFORMAT = '%d/%m/%Y %H:%M:%S'
+OUT_TEMPLATE = ''
 
 HELP = ('\nextract.py --videofile <inputfile> --annotations <annotationfile>.txt\n\n'
         'options:\n'
@@ -136,7 +132,11 @@ def iterate_over_annotations(opts):
                     start, end = get_window(ct, opts['window'])
                     snippet = get_epoch(dt)
                     subclip = clip.subclip(t_start=start, t_end=end)
-                    subclip.write_images_sequence(opts['folder'] + '/'+ infile_snippet + '_' + snippet + '_' + 'image%03d.jpeg')
+                    template = '{}/{}_{}_{}_image%03d.jpeg'
+                    out_name = template.format(
+                        opts['folder'], infile_snippet,
+                        snippet, parts[13].strip('"'))
+                    subclip.write_images_sequence(out_name)
                 except ValueError:
                     pass
 
