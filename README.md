@@ -24,7 +24,7 @@ https://www.python.org/downloads/ and install Python 2.7 (NOT 3.x).
 
 Once you install Python it may require that you add it to the windows path env variable, do this in the command line by typing
 
-```setx path "%path%;C:\Python27;"```
+```setx path "%path%;C:\Python27;C:\Python27\Scripts;"```
 
 you'll need to close and re-open your cmd window after you do this in order for it to take effect
 
