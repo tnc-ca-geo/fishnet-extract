@@ -17,7 +17,7 @@ Type ```python -V``` on the command line. It should return something like:
 
 ```Python 2.7.9```
 
-It has to be 2.7., ideally newer than 2.7.8 (because of the pip and virtualenv build in).
+It has to be 2.7., ideally newer than 2.7.8.
 
 If this command informs you that it did not find a Python executable, get Python for Windows here 
 https://www.python.org/downloads/ and install Python 2.7 (NOT 3.x).
