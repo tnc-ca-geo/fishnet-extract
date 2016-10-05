@@ -28,4 +28,4 @@ If that fails, you might
 
 ### Get this repository 
 
-Either download 
+Either download [ZipFile](https://codeload.github.com/tnc-ca-geo/extract/zip/master)
