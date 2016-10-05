@@ -33,8 +33,9 @@ Pip is Python's package manager. Since Python 2.7.9 it ships with the install an
 Try: ```pip --help```
 
 If that fails, you might
-1. Update your Python installation
-2. Get pip separately, see here https://www.python.org/downloads/
+1. update the window path env variable for pip using ```setx path "%path%;C:\Python27\Scripts;"```
+2. Update your Python installation
+3. Get pip separately, see here https://www.python.org/downloads/
 
 ### Get this repository 
 
