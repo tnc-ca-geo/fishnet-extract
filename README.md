@@ -1,20 +1,27 @@
 # extract
 
-Simple Python tool to extract images from videos. Support currently only one singel annotation file format.
+Simple Python tool to extract images from videos. Supports currently only one single annotation file format.
 
 ## Instruction for use under Windows
 
 ### Install Python 2.7
 
-We are using Python 2.7 because of its ubiquity and possible compatibility issues in some of the used modules.
+We are using Python 2.7 because of its ubiquity and possible compatibility
+issues in some of the modules used.
 
-Get it for Windows https://www.python.org/downloads/ and install.
-
-Make sure it is on your path:
+Test whether Python is installed and on your system path:
 
 Go to start menu > type ```cmd``` into search field > open cmd
 
-Type ```which python``` on the command line. It should return the path of the python executable, something like ```/c/Python27/python```
+Type ```python -V``` on the command line. It should return something like:
+
+```Python 2.7.9```
+
+It has to be 2.7., ideally newer than 2.7.8 (because of the pip and virtualenv build in).
+
+If this command informs you that it did not find a Python executable, get Python for Windows here 
+https://www.python.org/downloads/ and install Python 2.7 (NOT 3.x).
+
 
 ### Test whether pip is available
 
