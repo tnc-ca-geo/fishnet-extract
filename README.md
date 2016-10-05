@@ -26,6 +26,8 @@ Once you install Python it may require that you add it to the windows path env v
 
 ```setx path "%path%;C:\Python27;"```
 
+you'll need to close and re-open your cmd window after you do this in order for it to take effect
+
 ### Test whether pip is available
 
 Pip is Python's package manager. Since Python 2.7.9 it ships with the install and should be readily available.
@@ -33,8 +35,11 @@ Pip is Python's package manager. Since Python 2.7.9 it ships with the install an
 Try: ```pip --help```
 
 If that fails, you might
+
 1. update the window path env variable for pip using ```setx path "%path%;C:\Python27\Scripts;"```
+
 2. Update your Python installation
+
 3. Get pip separately, see here https://www.python.org/downloads/
 
 ### Get this repository 
