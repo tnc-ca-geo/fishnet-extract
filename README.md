@@ -99,7 +99,8 @@ python extract.py -v C:\media\cam_3_day.mp4 -a C:\media\1631.txt -o "2016-08-14 
 ```
 where:
 cam_3_day.mp4 = example name of input video file, file name should not include spaces
-1631.txt = input annotations text file, we are using AnnotationDateTime to specify, please make sure a replacement file looks identical (e.g. AnnotationDateTime) in same column position
+
+1631.txt = Input annotations text file. We are using AnnotationDateTime to specify extract location, please ensure a replacement file looks identical (e.g. AnnotationDateTime in same column position)
 
 Notes:
 
