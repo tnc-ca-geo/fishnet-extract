@@ -69,9 +69,11 @@ Use your ```cmd``` terminal to make sure all the modules are installed properly.
 
 ```python extract.py --help```
 
-(If you have several versions of Python installed on your system, you might provide an explicit path to python 2.7.9 or above, e.g.
+These scripts rely on https://ffmpeg.org/ and this will be automatically downloaded after running help if you do not have it
 
-```C:/Python27/python extract.py --help```)
+If you have several versions of Python installed on your system, you might provide an explicit path to python 2.7.9 or above, e.g.
+
+```C:\Python27\python extract.py --help```
 
 If you use a virtual env make sure it is activated (see below).
 
