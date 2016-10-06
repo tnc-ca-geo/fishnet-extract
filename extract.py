@@ -32,8 +32,8 @@ def get_absolute_path(filename):
             os.path.dirname(os.path.realpath(__file__)), filename))
 
 
-def get_drive_suffix(annotationfile):
-    return os.path.split(annotationfile)[1].replace('.txt', '')
+def get_part_from_filename(fil):
+    return os.path.split(fil)[1].split('.')[0]
 
 
 def get_options():
@@ -128,7 +128,6 @@ def iterate_over_annotations(opts):
     print '\nSetting start time to {}.'.format(offset)
     print 'Annotation times will be interpreted relative to this time.\n\n'
     clip = VideoFileClip(opts['videofile'])
-    infile_snippet = os.path.split(opts['videofile'])[1].replace('.mp4', '')
     with open(opts['annotations']) as a:
         for line in a:
             parts = line.split(',')
@@ -142,8 +141,8 @@ def iterate_over_annotations(opts):
                     subclip = clip.subclip(t_start=start, t_end=end)
                     out_name = OUT_TEMPLATE.format(
                         opts['folder'],
-                        get_drive_suffix(opts['annotations']),
-                        infile_snippet,
+                        get_part_from_filename(opts['annotations']),
+                        get_part_from_filename(opts['videofile']),
                         snippet,
                         parts[13].strip('"'))  # species code
                     subclip.write_images_sequence(out_name, fps=10)
