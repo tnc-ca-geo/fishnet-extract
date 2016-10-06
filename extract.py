@@ -5,7 +5,6 @@ from getopt import getopt, GetoptError
 from moviepy.editor import VideoFileClip
 from metadata import metadata_for_filelike
 
-INFILE = '../media/cam_3_day.mp4'
 DEFAULT_FOLDER = '.'
 TIMEFORMAT = '%d/%m/%Y %H:%M:%S'
 OUT_TEMPLATE = '{0}/{1}_{2}_{3}_{4}_image%03d.jpeg'
