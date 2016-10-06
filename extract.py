@@ -6,13 +6,12 @@ from moviepy.editor import VideoFileClip
 from metadata import metadata_for_filelike
 
 INFILE = '../media/cam_3_day.mp4'
-ANNOTATIONS ='../media/1631.txt'
-DEFAULT_FOLDER = '.' # os.path.dirname(os.path.realpath(__file__))
+DEFAULT_FOLDER = '.'
 TIMEFORMAT = '%d/%m/%Y %H:%M:%S'
-OUT_TEMPLATE = '{0}/{1}_{2}_{3}_image%03d.jpeg'
+OUT_TEMPLATE = '{0}/{1}_{2}_{3}_{4}_image%03d.jpeg'
 
 HELP = (
-    '\nextract.py'
+    '\nextract.py '
     '--videofile <inputfile> --annotations <annotationfile>.txt\n\n'
     'options:\n\n'
     '   -o --offset  Start time of the video (you might be able to get it\n'
@@ -20,15 +19,21 @@ HELP = (
     '                \'Create Date\' will be used. Time format is \n'
     '                \"YYYY-MM-DD HH:MM:SS\". Use quotes around the \n'
     '                date or escape otherwise.\n'
-    '   -f --folder  Output folder. If not provided the current folder will be used.\n'
-    '   -w --window  Number of seconds that will be extracted from the event start. Defaults to 3.\n'
-    '   -h --help    This help\n')
+    '   -f --folder  Output folder.\n'
+    '                If not provided the current folder will be used.\n'
+    '   -w --window  Number of seconds that will be extracted from the event\n'
+    '                start. Defaults to 3.\n'
+    '   -h --help    This help.\n')
 
 
 def get_absolute_path(filename):
     return os.path.abspath(
         os.path.join(
             os.path.dirname(os.path.realpath(__file__)), filename))
+
+
+def get_drive_suffix(annotationfile):
+    return os.path.split(annotationfile)[1].replace('.txt', '')
 
 
 def get_options():
@@ -136,8 +141,11 @@ def iterate_over_annotations(opts):
                     snippet = get_epoch(dt)
                     subclip = clip.subclip(t_start=start, t_end=end)
                     out_name = OUT_TEMPLATE.format(
-                        opts['folder'], infile_snippet,
-                        snippet, parts[13].strip('"'))
+                        opts['folder'],
+                        get_drive_suffix(opts['annotations']),
+                        infile_snippet,
+                        snippet,
+                        parts[13].strip('"'))  # species code
                     subclip.write_images_sequence(out_name, fps=10)
                 except ValueError:
                     pass
