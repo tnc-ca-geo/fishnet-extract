@@ -4,10 +4,14 @@ from datetime import datetime
 from getopt import getopt, GetoptError
 from moviepy.editor import VideoFileClip
 from metadata import metadata_for_filelike
+from crop import crop_pics
+
 
 DEFAULT_FOLDER = '.'
 TIMEFORMAT = '%d/%m/%Y %H:%M:%S'
 OUT_TEMPLATE = '{0}/{1}_{2}_{3}_{4}_image%03d.jpeg'
+CROP_TOP = 50
+
 
 HELP = (
     '\nextract.py '
@@ -152,6 +156,7 @@ def iterate_over_annotations(opts):
 def main():
     opts = get_options()
     iterate_over_annotations(opts)
+    crop_pics(opts['folder'], CROP_TOP)
 
 
 if __name__ == '__main__':
