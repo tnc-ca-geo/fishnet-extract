@@ -26,6 +26,8 @@ HELP = (
     '                If not provided the current folder will be used.\n'
     '   -w --window  Number of seconds that will be extracted from the event\n'
     '                start. Defaults to 3.\n'
+    '   -c --crop    Number of pixels cropped from the top of extracted image\n'
+    '                Defaults to 50.\n'
     '   -h --help    This help.\n')
 
 
@@ -43,14 +45,15 @@ def get_options():
     ret = {
         'folder': DEFAULT_FOLDER,
         'offset': None,
-        'window': 3
+        'window': 3,
+        'crop': CROP_TOP
     }
     try:
         opts, args = getopt(
             sys.argv[1:],
-            'v:a:o:f:w:h',
+            'v:a:o:f:w:c:h',
             ['videofile=', 'annotations=', 'offset=',
-             'folder=', 'window=', 'help'])
+             'folder=', 'window=', 'crop=', 'help'])
     except GetoptError:
         print HELP
         sys.exit(2)
@@ -90,6 +93,11 @@ def get_options():
             elif opt in ('-w', '--window'):
                 try:
                     ret['window'] = int(arg)
+                except ValueError:
+                    pass
+            elif opt in ('-c', '-crop'):
+                try:
+                    ret['crop'] = int(arg)
                 except ValueError:
                     pass
     if not 'videofile' in ret:
@@ -156,7 +164,8 @@ def iterate_over_annotations(opts):
 def main():
     opts = get_options()
     iterate_over_annotations(opts)
-    crop_pics(opts['folder'], CROP_TOP)
+    crop_pics(opts['folder'], opts['crop'])
+    print '\nDONE\n'
 
 
 if __name__ == '__main__':
