@@ -1,6 +1,6 @@
 # extract
 
-Simple Python tool to extract images from videos. Currently supports only one annotation file format.
+Simple Python tool to extract images from videos. Currently supports only one annotation file format used by Archipelago Marine Research - Asia Pacific.
 
 ## Instruction for use on Windows
 
