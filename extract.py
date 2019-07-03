@@ -8,7 +8,7 @@ from crop import crop_pics
 
 
 DEFAULT_FOLDER = '.'
-TIMEFORMAT = '%d/%m/%Y %H:%M:%S'
+TIMEFORMAT = '%Y-%m-%d %H:%M:%S'
 OUT_TEMPLATE = '{0}/{1}_{2}_{3}_{4}_image%03d.jpeg'
 CROP_TOP = 50
 
@@ -142,7 +142,7 @@ def iterate_over_annotations(opts):
     with open(opts['annotations']) as a:
         for line in a:
             parts = line.split(',')
-            dt = datetime.strptime(parts[16], TIMEFORMAT)
+            dt = datetime.strptime(parts[3], TIMEFORMAT)
             rt = dt - offset
             ct = convert_time_delta(rt)
             if ct:
@@ -155,7 +155,7 @@ def iterate_over_annotations(opts):
                         get_part_from_filename(opts['annotations']),
                         get_part_from_filename(opts['videofile']),
                         snippet,
-                        parts[13].strip('"'))  # species code
+                        parts[5].strip('"'))  # species code
                     subclip.write_images_sequence(out_name, fps=10)
                 except ValueError:
                     pass
