@@ -135,6 +135,7 @@ def offset_from_exif(videofile):
 
 
 def transform_dict(dic):
+    print(dic)
     for item in dic:
         try:
             dic[item] = int(dic[item])
@@ -180,6 +181,7 @@ def iterate_over_annotations(opts):
                                 opts['annotations']),
                             'filename': get_part_from_filename(dic['filename']),
                             'timestamp': snippet,
+                            'camera': dic['camera'],
                             'label': dic['label']})
                         ensure_directories(out_name)
                         subclip.write_images_sequence(out_name, fps=opts['fps'])
