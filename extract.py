@@ -1,34 +1,48 @@
+# standard library
+import csv
 import os
 import sys
-from datetime import datetime
+import re
+from datetime import datetime, timedelta
 from getopt import getopt, GetoptError
+# third party
 from moviepy.editor import VideoFileClip
+# project
 from metadata import metadata_for_filelike
 from crop import crop_pics
-
-
-DEFAULT_FOLDER = '.'
-TIMEFORMAT = '%Y-%m-%d %H:%M:%S'
-OUT_TEMPLATE = '{0}/{1}_{2}_{3}_{4}_image%03d.jpeg'
-CROP_TOP = 50
+# configuration
+import config
 
 
 HELP = (
     '\nextract.py '
-    '--videofile <inputfile> --annotations <annotationfile>.txt\n\n'
+    '--video_directory <video_directory> --annotations '
+    '<annotation_file>\n\n'
     'options:\n\n'
-    '   -o --offset  Start time of the video (you might be able to get it\n'
-    '                from the first frame). If not provided, EXIF\n'
-    '                \'Create Date\' will be used. Time format is \n'
-    '                \"YYYY-MM-DD HH:MM:SS\". Use quotes around the \n'
-    '                date or escape otherwise.\n'
-    '   -f --folder  Output folder.\n'
-    '                If not provided the current folder will be used.\n'
-    '   -w --window  Number of seconds that will be extracted from the event\n'
-    '                start. Defaults to 3.\n'
-    '   -c --crop    Number of pixels cropped from the top of extracted image\n'
-    '                Defaults to 50.\n'
-    '   -h --help    This help.\n')
+    '   -a --annotations       Annotation file (csv, required)\n'
+#    '   -c --crop              Numbers of pixels to crop from top '
+    '(default 50)\n'
+    '   -f --fps               Extracted frame rate per second (default 5)\n'
+    '   -o --offset            Windows offset from event start in seconds'
+    '(default -10)\n'
+    '   -s --stills_directory  Output directory (default ./stills/)\n'
+    '   -v --video_directory   Video directory (required)\n'
+    '   -w --window            Extracted window in seconds (default 20)\n\n'
+    'The annotation csv must implement following columns:\n\n'
+    'filename ... name of the videofile in which event can be found\n'
+    'start ... start timestamp of the videofile\n'
+    'event ... event timestamp\n'
+    'label ... event label\n\n'
+    'Edit config.mapping to map an annotation file with different '
+    'columns names\n\n')
+
+
+def ensure_directories(filename):
+    dirname = os.path.dirname(filename)
+    try:
+        os.makedirs(dirname)
+    except FileExistsError:
+        pass
 
 
 def get_absolute_path(filename):
@@ -42,30 +56,24 @@ def get_part_from_filename(fil):
 
 
 def get_options():
+    # TODO: implement argparse
     ret = {
-        'folder': DEFAULT_FOLDER,
-        'offset': None,
-        'window': 3,
-        'crop': CROP_TOP
-    }
+        'stills_directory': get_absolute_path(config.DEFAULT_DIRECTORY),
+        'window': config.DEFAULT_WINDOW,
+        'crop': config.CROP_TOP,
+        'fps': config.DEFAULT_FPS,
+        'offset': config.DEFAULT_OFFSET}
     try:
         opts, args = getopt(
             sys.argv[1:],
-            'v:a:o:f:w:c:h',
-            ['videofile=', 'annotations=', 'offset=',
-             'folder=', 'window=', 'crop=', 'help'])
+            'a:c:f:o:s:v:w:h',
+            ['annotations=', 'crop=', 'fps=', 'offset=',
+             'stills_directory=', 'video_directory=', 'window=', 'help'])
     except GetoptError:
         print(HELP)
         sys.exit(2)
     else:
         for opt, arg in opts:
-            if opt in ('-v', '--videofile'):
-                path = get_absolute_path(arg)
-                if os.path.isfile(path):
-                    ret['videofile'] = path
-                else:
-                    print('\nVideofile does not exist.\n')
-                    sys.exit(2)
             if opt in ('-a', '--annotations'):
                 path = get_absolute_path(arg)
                 if os.path.isfile(path):
@@ -73,39 +81,31 @@ def get_options():
                 else:
                     print('\nAnnotations file does not exist.\n')
                     sys.exit(2)
+            if opt in ('-c', '--crop'):
+                ret['crop'] = int(arg)
+            if opt in ('-f', '--fps'):
+                ret['fps'] = float(arg)
+            if opt in ['-o', '--offset']:
+                ret['offset'] = int(arg)
+            if opt in ['-s', '--stills_directory']:
+                ret['stills_directory'] = get_absolute_path(arg)
+            if opt in ['-v', '--video_directory']:
+                path = get_absolute_path(arg)
+                if os.path.isdir(path):
+                    ret['video_directory'] = path
+                else:
+                    print('\nVideo directory does not exist.\n')
+                    sys.exit(2)
+            if opt in ('-w', '--window'):
+                ret['window'] = int(args)
             if opt in ('-h', '--help'):
                 print(HELP)
                 sys.exit(2)
-            elif opt in ('-o', '--offset'):
-                try:
-                    ret['offset'] = datetime.strptime(
-                        arg, '%Y-%m-%d %H:%M:%S')
-                except ValueError:
-                    print('\nInvalid date format.\n')
-                    sys.exit(2)
-            elif opt in ('-f', '--folder'):
-                path = get_absolute_path(arg)
-                if os.path.isdir(path):
-                    ret['folder'] = path
-                else:
-                    print('\nOutput folder does not exists.\n')
-                    sys.exit(2)
-            elif opt in ('-w', '--window'):
-                try:
-                    ret['window'] = int(arg)
-                except ValueError:
-                    pass
-            elif opt in ('-c', '-crop'):
-                try:
-                    ret['crop'] = int(arg)
-                except ValueError:
-                    pass
-    if not 'videofile' in ret:
-        print('\nVideofile is required.\n')
-        sys.exit(2)
-    if not 'annotations' in ret:
-        print('\nAnnotationfile is required.\n')
-        sys.exit(2)
+        if 'annotations' not in ret:
+            print('\nAnnotation file (--annotations or -a) is required\n')
+            sys.exit(2)
+        if 'video_directory' not in ret:
+            print('\nVideo directory (--video_directory or -v) is required\n')
     return ret
 
 
@@ -118,9 +118,9 @@ def convert_time_delta(timedelta):
     return (hours, mins, secs)
 
 
-def get_window(timedelta, diff):
-    start = timedelta
-    end = (timedelta[0], timedelta[1], timedelta[2] + diff)
+def get_window(delta, diff, offset=0):
+    start = (delta[0], delta[1], delta[2] + offset)
+    end = (delta[0], delta[1], delta[2] + diff + offset)
     return start, end
 
 
@@ -134,37 +134,63 @@ def offset_from_exif(videofile):
         return metadata.getValues('creation_date')[0]
 
 
+def transform_dict(dic):
+    for item in dic:
+        try:
+            dic[item] = int(dic[item])
+        except ValueError:
+            pass
+        for timeformat in config.TIMEFORMATS:
+            try:
+                dic[item] = datetime.strptime(dic[item], timeformat)
+            except (TypeError, ValueError):
+                pass
+    for item in dic.copy():
+        if item in config.mapping:
+            if config.mapping[item]:
+                dic[config.mapping[item]] = dic.pop(item)
+            else:
+                dic.pop(item)
+    dic['label'] = dic['label'].lower().replace(' ', '_')
+    return dic
+
+
 def iterate_over_annotations(opts):
-    offset = opts['offset'] or offset_from_exif(opts['videofile'])
-    print('\nSetting start time to {}.'.format(offset))
-    print('Annotation times will be interpreted relative to this time.\n\n')
-    clip = VideoFileClip(opts['videofile'])
-    with open(opts['annotations']) as a:
-        for line in a:
-            parts = line.split(',')
-            dt = datetime.strptime(parts[3], TIMEFORMAT)
-            rt = dt - offset
+    with open(opts['annotations']) as csvfile:
+        reader = csv.DictReader(csvfile)
+        for annotation in reader:
+            dic = transform_dict(annotation)
+            rt = dic['event'] - dic['start']
             ct = convert_time_delta(rt)
-            if ct:
-                try:
-                    start, end = get_window(ct, opts['window'])
-                    snippet = get_epoch(dt)
-                    subclip = clip.subclip(t_start=start, t_end=end)
-                    out_name = OUT_TEMPLATE.format(
-                        opts['folder'],
-                        get_part_from_filename(opts['annotations']),
-                        get_part_from_filename(opts['videofile']),
-                        snippet,
-                        parts[5].strip('"'))  # species code
-                    subclip.write_images_sequence(out_name, fps=10)
-                except ValueError:
-                    pass
+            path = os.path.join(opts['video_directory'], dic['filename'])
+            try:
+                clip = VideoFileClip(path)
+            except OSError:
+                print('Video {} does not exist'.format(path))
+            else:
+                if ct:
+                    try:
+                        start, end = get_window(
+                            ct, opts['window'], offset=opts['offset'])
+                        snippet = get_epoch(dic['event'])
+                        subclip = clip.subclip(t_start=start, t_end=end)
+                        out_name = config.OUT_TEMPLATE.format(**{
+                            'stills_directory': opts['stills_directory'],
+                            'annotations': get_part_from_filename(
+                                opts['annotations']),
+                            'filename': get_part_from_filename(dic['filename']),
+                            'timestamp': snippet,
+                            'label': dic['label']})
+                        ensure_directories(out_name)
+                        subclip.write_images_sequence(out_name, fps=opts['fps'])
+                    except ValueError:
+                        pass
 
 
 def main():
     opts = get_options()
     iterate_over_annotations(opts)
-    crop_pics(opts['folder'], opts['crop'])
+    # crop_pics(opts['stills_directory'], opts['crop'])
     print('\nDONE\n')
 
 
