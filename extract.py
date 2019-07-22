@@ -135,7 +135,6 @@ def offset_from_exif(videofile):
 
 
 def transform_dict(dic):
-    print(dic)
     for item in dic:
         try:
             dic[item] = int(dic[item])
