@@ -97,7 +97,7 @@ def get_options():
                     print('\nVideo directory does not exist.\n')
                     sys.exit(2)
             if opt in ('-w', '--window'):
-                ret['window'] = int(args)
+                ret['window'] = int(arg)
             if opt in ('-h', '--help'):
                 print(HELP)
                 sys.exit(2)
