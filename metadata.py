@@ -1,9 +1,9 @@
 # from http://stackoverflow.com/
 # questions/11302908/python-using-hachoir-how-extract-metadata-for-file-like-objects
-from hachoir_core.error import HachoirError
-from hachoir_core.stream import InputIOStream
-from hachoir_parser import guessParser
-from hachoir_metadata import extractMetadata
+# from hachoir.core.error import HachoirError
+from hachoir.stream.input import InputIOStream
+from hachoir.parser.guess import guessParser
+from hachoir.metadata import extractMetadata
 
 
 def metadata_for_filelike(filelike):
@@ -20,7 +20,8 @@ def metadata_for_filelike(filelike):
 
     try:
         metadata = extractMetadata(parser)
-    except HachoirError:
+    # used to be HachoirError, but not longer defined by package
+    except:
         return None
 
     return metadata

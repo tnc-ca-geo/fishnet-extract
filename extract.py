@@ -55,7 +55,7 @@ def get_options():
             ['videofile=', 'annotations=', 'offset=',
              'folder=', 'window=', 'crop=', 'help'])
     except GetoptError:
-        print HELP
+        print(HELP)
         sys.exit(2)
     else:
         for opt, arg in opts:
@@ -64,31 +64,31 @@ def get_options():
                 if os.path.isfile(path):
                     ret['videofile'] = path
                 else:
-                    print '\nVideofile does not exist.\n'
+                    print('\nVideofile does not exist.\n')
                     sys.exit(2)
             if opt in ('-a', '--annotations'):
                 path = get_absolute_path(arg)
                 if os.path.isfile(path):
                     ret['annotations'] = path
                 else:
-                    print '\nAnnotations file does not exist.\n'
+                    print('\nAnnotations file does not exist.\n')
                     sys.exit(2)
             if opt in ('-h', '--help'):
-                print HELP
+                print(HELP)
                 sys.exit(2)
             elif opt in ('-o', '--offset'):
                 try:
                     ret['offset'] = datetime.strptime(
                         arg, '%Y-%m-%d %H:%M:%S')
                 except ValueError:
-                    print '\nInvalid date format.\n'
+                    print('\nInvalid date format.\n')
                     sys.exit(2)
             elif opt in ('-f', '--folder'):
                 path = get_absolute_path(arg)
                 if os.path.isdir(path):
                     ret['folder'] = path
                 else:
-                    print '\nOutput folder does not exists.\n'
+                    print('\nOutput folder does not exists.\n')
                     sys.exit(2)
             elif opt in ('-w', '--window'):
                 try:
@@ -101,10 +101,10 @@ def get_options():
                 except ValueError:
                     pass
     if not 'videofile' in ret:
-        print '\nVideofile is required.\n'
+        print('\nVideofile is required.\n')
         sys.exit(2)
     if not 'annotations' in ret:
-        print '\nAnnotationfile is required.\n'
+        print('\nAnnotationfile is required.\n')
         sys.exit(2)
     return ret
 
@@ -136,8 +136,8 @@ def offset_from_exif(videofile):
 
 def iterate_over_annotations(opts):
     offset = opts['offset'] or offset_from_exif(opts['videofile'])
-    print '\nSetting start time to {}.'.format(offset)
-    print 'Annotation times will be interpreted relative to this time.\n\n'
+    print('\nSetting start time to {}.'.format(offset))
+    print('Annotation times will be interpreted relative to this time.\n\n')
     clip = VideoFileClip(opts['videofile'])
     with open(opts['annotations']) as a:
         for line in a:
@@ -165,7 +165,7 @@ def main():
     opts = get_options()
     iterate_over_annotations(opts)
     crop_pics(opts['folder'], opts['crop'])
-    print '\nDONE\n'
+    print('\nDONE\n')
 
 
 if __name__ == '__main__':
