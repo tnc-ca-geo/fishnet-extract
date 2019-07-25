@@ -29,3 +29,6 @@ This script required Python 3.6 or higher.
 
 Install dependencies with ```pip3 install -r requirements.txt```
 
+Activate the virtual environment
+```source ~/scripts/env3/bin/activate```
+
