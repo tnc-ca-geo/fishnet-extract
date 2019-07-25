@@ -29,6 +29,8 @@ This script required Python 3.6 or higher.
 
 Install dependencies with ```pip3 install -r requirements.txt```
 
-Activate the virtual environment
-```source ~/scripts/env3/bin/activate```
+Activate the virtual environment ```source ~/scripts/env3/bin/activate```
 
+And finally here's an example
+```$ python extract.py -v /home/devuser/data/AFMA/AUCF03-012029-181111_202044/videos -a /home/devuser/data/AFMA/AUCF03-012029-181111_202044/AUCF03-12029_labels_v010.csv -s /home/devuser/data/AFMA/test_stills -o -10 -w 20 -f 3
+```
