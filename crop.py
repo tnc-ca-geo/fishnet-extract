@@ -3,6 +3,11 @@ from PIL import Image
 
 
 def crop_pics(folder, top):
+    """
+    This crops all images in a folder. This is obsolete to the project
+    since the function is now covered by MoviePy.
+    """
+    # TODO: remove
     image_names = os.listdir(folder)
     number = len(image_names)
     counter = 0

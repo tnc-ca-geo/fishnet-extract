@@ -20,8 +20,8 @@ HELP = (
     '<annotation_file>\n\n'
     'options:\n\n'
     '   -a --annotations       Annotation file (csv, required)\n'
-#   '   -c --crop              Numbers of pixels to crop from top '
-#   '(default 50)\n'
+    '   -c --crop              Numbers of pixels to crop from top '
+    '(default 50)\n'
     '   -f --fps               Extracted frame rate per second (default 5)\n'
     '   -o --offset            Windows offset from event start in seconds'
     '(default -10)\n'
@@ -183,6 +183,7 @@ def iterate_over_annotations(opts):
                             'camera': dic['camera'],
                             'label': dic['label']})
                         ensure_directories(out_name)
+                        subclip = subclip.crop(0, opts['crop'])
                         subclip.write_images_sequence(out_name, fps=opts['fps'])
                     except ValueError:
                         pass
