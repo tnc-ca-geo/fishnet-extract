@@ -7,7 +7,7 @@ DEFAULT_FPS = 5
 DEFAULT_WINDOW = 20
 DEFAULT_OFFSET = -10
 TIMEFORMATS = ['%Y-%m-%d %H:%M:%S', '%Y-%m-%d %H:%M:%S.%f']
-OUT_TEMPLATE = '{stills_directory}/{annotations}/{filename}/{label}/{camera}_{timestamp}_%03d.jpeg'
+OUT_TEMPLATE = '{stills_directory}/{filename}-{timestamp}-{label}-%03d.jpeg'
 CROP_TOP = 50
 
 
