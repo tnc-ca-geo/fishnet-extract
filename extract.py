@@ -188,6 +188,8 @@ def iterate_over_annotations(opts):
                         subclip.write_images_sequence(out_name, fps=opts['fps'])
                     except ValueError:
                         pass
+                del clip.reader
+                del clip
 
 
 def main():
