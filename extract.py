@@ -162,7 +162,8 @@ def iterate_over_annotations(opts):
             dic = transform_dict(annotation)
             rt = dic['event'] - dic['start']
             ct = convert_time_delta(rt)
-            path = os.path.join(opts['video_directory'], dic['filename'])
+            path = os.path.abspath(
+                os.path.join(opts['video_directory'], dic['filename']))
             try:
                 clip = VideoFileClip(path)
             except OSError:
