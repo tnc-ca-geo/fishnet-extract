@@ -38,14 +38,6 @@ HELP = (
     'columns names\n\n')
 
 
-def ensure_directories(filename):
-    dirname = os.path.dirname(filename)
-    try:
-        os.makedirs(dirname)
-    except FileExistsError:
-        pass
-
-
 def get_absolute_path(filename):
     return os.path.abspath(
         os.path.join(
@@ -166,7 +158,6 @@ def iterate_over_annotations(opts):
             path = os.path.abspath(
                 os.path.join(opts['video_directory'], dic['filename']))
             try:
-                print(threading.active_count())
                 clip = VideoFileClip(path)
             except OSError:
                 print('Video {} does not exist'.format(path))
@@ -185,7 +176,7 @@ def iterate_over_annotations(opts):
                             'timestamp': snippet,
                             'camera': dic['camera'],
                             'label': dic['label']})
-                        ensure_directories(out_name)
+                        os.makedirs(os.path.dirname(out_name), exist_ok=True)
                         subclip = subclip.crop(0, opts['crop'])
                         subclip.write_images_sequence(out_name, fps=opts['fps'])
                     except ValueError:
