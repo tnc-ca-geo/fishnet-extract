@@ -3,7 +3,7 @@
 Extract images from video according to annotation file
 
 ```
-extract.py --video_directory <video_directory> --annotations <annotation_file>
+python extract.py --video_directory <video_directory> --annotations <annotation_file>
 
 options:
 
