@@ -5,6 +5,7 @@ import sys
 import re
 from datetime import datetime, timedelta
 from getopt import getopt, GetoptError
+import threading
 # third party
 from moviepy.editor import VideoFileClip
 # project
@@ -165,6 +166,7 @@ def iterate_over_annotations(opts):
             path = os.path.abspath(
                 os.path.join(opts['video_directory'], dic['filename']))
             try:
+                print(threading.active_count())
                 clip = VideoFileClip(path)
             except OSError:
                 print('Video {} does not exist'.format(path))
@@ -188,8 +190,8 @@ def iterate_over_annotations(opts):
                         subclip.write_images_sequence(out_name, fps=opts['fps'])
                     except ValueError:
                         pass
-                del clip.reader
-                del clip
+                clip.close()
+                clip = None
 
 
 def main():
