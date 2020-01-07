@@ -8,8 +8,10 @@ python extract.py --video_directory <video_directory> --annotations <annotation_
 options:
 
    -a --annotations       Annotation file (csv, required)
+   -d --clips_cirectory   Output directory for clips (default ./clips/)
    -c --crop              Numbers of pixels to crop from top (default 50)
    -f --fps               Extracted frame rate per second (default 5)
+   -m --clips             Store clips (instead of stills, fps arg ignored, default False)
    -o --offset            Windows offset from event start in seconds(default -10)
    -s --stills_directory  Output directory (default ./stills/)
    -v --video_directory   Video directory (required)
@@ -33,8 +35,13 @@ Install dependencies with
 Activate the virtual environment
 ```source ~/scripts/env3/bin/activate```
 
-And finally here's an example
+And finally here is an example storing still images:
 ```
 $ python extract.py -v /home/devuser/data/AFMA/AUCF03-012029-181111_202044/videos -a /home/devuser/data/AFMA/AUCF03-012029-181111_202044/AUCF03-12029_labels_v010.csv -s /home/devuser/data/AFMA/test_stills -o -10 -w 20 -f 3
+```
 
+This is another example storing movie clips (-m option):
+
+```
+$ python extract.py -v /home/devuser/data/AFMA/AUCF03-012029-181111_202044/videos -a /home/devuser/data/AFMA/AUCF03-012029-181111_202044/AUCF03-12029_labels_v010.csv -s /home/devuser/data/AFMA/test_stills -o -10 -w 20 -m
 ```
