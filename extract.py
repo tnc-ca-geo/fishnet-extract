@@ -23,11 +23,14 @@ HELP = (
     '   -a --annotations       Annotation file (csv, required)\n'
     '   -c --crop              Numbers of pixels to crop from top '
     '(default 50)\n'
+    '   -d --clip_directory    Output directory for clips (default ./clips/)\n'
     '   -f --fps               Extracted frame rate per second (default 5)\n'
+    '   -m --clips             Store clips (instead of stills, fps same'
+    ' as original)\n'
     '   -o --offset            Windows offset from event start in seconds'
     '(default -10)\n'
     '   -s --stills_directory  Output directory (default ./stills/)\n'
-    '   -v --video_directory   Video directory (required)\n'
+    '   -v --video_directory   Input video directory (required)\n'
     '   -w --window            Extracted window in seconds (default 20)\n\n'
     'The annotation csv must implement following columns:\n\n'
     'filename ... name of the videofile in which event can be found\n'
@@ -51,7 +54,10 @@ def get_part_from_filename(fil):
 def get_options():
     # TODO: implement argparse
     ret = {
+        'clips': config.CLIPS,
+        'clip_directory': config.CLIP_DIRECTORY,
         'stills_directory': get_absolute_path(config.DEFAULT_DIRECTORY),
+        'clips_directory': get_absolute_path(config.DEFAULT_CLIPS_DIRECTORY),
         'window': config.DEFAULT_WINDOW,
         'crop': config.CROP_TOP,
         'fps': config.DEFAULT_FPS,
@@ -59,10 +65,12 @@ def get_options():
     try:
         opts, args = getopt(
             sys.argv[1:],
-            'a:c:f:o:s:v:w:h',
-            ['annotations=', 'crop=', 'fps=', 'offset=',
-             'stills_directory=', 'video_directory=', 'window=', 'help'])
-    except GetoptError:
+            'a:d:c:f:o:s:v:w:h:m', [
+                'annotations=', 'clips_directory=', 'crop=', 'fps=', 'offset=',
+                'stills_directory=', 'video_directory=', 'window=',
+                'help', 'clips'])
+    except GetoptError as e:
+        print(e)
         print(HELP)
         sys.exit(2)
     else:
@@ -82,6 +90,8 @@ def get_options():
                 ret['offset'] = int(arg)
             if opt in ['-s', '--stills_directory']:
                 ret['stills_directory'] = get_absolute_path(arg)
+            if opt in ['-m', '--clips']:
+                ret['clips'] = True
             if opt in ['-v', '--video_directory']:
                 path = get_absolute_path(arg)
                 if os.path.isdir(path):
@@ -99,6 +109,7 @@ def get_options():
             sys.exit(2)
         if 'video_directory' not in ret:
             print('\nVideo directory (--video_directory or -v) is required\n')
+            sys.exit(2)
     return ret
 
 
@@ -149,6 +160,7 @@ def transform_dict(dic):
 
 
 def iterate_over_annotations(opts):
+    print(opts)
     with open(opts['annotations']) as csvfile:
         reader = csv.DictReader(csvfile)
         for annotation in reader:
@@ -160,29 +172,41 @@ def iterate_over_annotations(opts):
             try:
                 clip = VideoFileClip(path)
             except OSError:
-                print('Video {} does not exist'.format(path))
+                # print('Video {} does not exist'.format(path))
+                print('.', end='', flush=True)
             else:
                 if ct:
+                    # TODO: check what we are trying to achieve with the try
+                    # statement
                     try:
                         start, end = get_window(
                             ct, opts['window'], offset=opts['offset'])
                         snippet = get_epoch(dic['event'])
                         subclip = clip.subclip(t_start=start, t_end=end)
-                        out_name = config.OUT_TEMPLATE.format(**{
-                            'stills_directory': opts['stills_directory'],
+                        subclip = subclip.crop(0, opts['crop'])
+                        variables = {
                             'annotations': get_part_from_filename(
                                 opts['annotations']),
                             'filename': get_part_from_filename(dic['filename']),
                             'timestamp': snippet,
                             'camera': dic['camera'],
-                            'label': dic['label']})
-                        os.makedirs(os.path.dirname(out_name), exist_ok=True)
-                        subclip = subclip.crop(0, opts['crop'])
-                        subclip.write_images_sequence(out_name, fps=opts['fps'])
+                            'label': dic['label']}
+                        if opts['clips']:
+                            out_name= config.VIDEO_OUT_TEMPLATE.format(
+                                clips_directory=opts['clips_directory'],
+                                **variables)
+                            os.makedirs(os.path.dirname(out_name), exist_ok=True)
+                            subclip.write_videofile(out_name)
+                        else:
+                            out_name = config.OUT_TEMPLATE.format(
+                                stills_directory=opts['stills_directory'],
+                                **variables)
+                            os.makedirs(out_name, exist_ok=True)
+                            subclip.write_images_sequence(out_name, fps=opts['fps'])
                     except ValueError:
-                        pass
-                clip.close()
-                clip = None
+                            pass
+                    del clip.reader
+                del clip
 
 
 def main():
