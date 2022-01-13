@@ -1,5 +1,5 @@
 apipkg==1.5
 execnet==1.7.1
 moviepy==1.0.1
-pillow==6.2.1
+pillow==9.0.0
 hachoir==3.0a5
